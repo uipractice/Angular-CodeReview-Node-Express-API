@@ -1,7 +1,7 @@
 const router = require("express").Router();
 const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
-
+const _idValidation = require("../help/_idValidation");
 const getDetils = (condition) => {
   return new Promise((resolve, reject) => {
     try {
@@ -76,30 +76,34 @@ router.put("/", async (req, res) => {
   }/${date.getFullYear()}`;
   delete data._id;
   try {
-    const condition = { _id: new ObjectId(id) };
-    const detailsData = await getDetils(condition);
-    if (detailsData) {
-      if (detailsData.status != "completed") {
-        data.updatedDate = dateNow;
-        db.details.update(condition, { $set: { ...data } }, (err, doc) => {
-          if (err) {
-            res.status(500).json({ success: false, message: err });
-          } else {
-            res.json({
-              success: true,
-              message: "Details data successfully updated",
-            });
-          }
-        });
+    if (_idValidation(id)) {
+      const condition = { _id: new ObjectId(id) };
+      const detailsData = await getDetils(condition);
+      if (detailsData) {
+        if (detailsData.status != "completed") {
+          data.updatedDate = dateNow;
+          db.details.update(condition, { $set: { ...data } }, (err, doc) => {
+            if (err) {
+              res.status(500).json({ success: false, message: err });
+            } else {
+              res.json({
+                success: true,
+                message: "Details data successfully updated",
+              });
+            }
+          });
+        } else {
+          res
+            .status(500)
+            .json({ success: false, message: `This record already completed` });
+        }
       } else {
         res
           .status(500)
-          .json({ success: false, message: `This record already completed` });
+          .json({ success: false, message: `Record not found in database` });
       }
     } else {
-      res
-        .status(500)
-        .json({ success: false, message: `Record not found in database` });
+      res.status(500).json({ success: false, message: `Invalid _id` });
     }
   } catch (err) {
     res.status(500).json({ success: false, message: err });
@@ -128,14 +132,20 @@ router.get("/", (req, res) => {
 
 router.delete("/", (req, res) => {
   try {
-    db.details.remove({_id: new ObjectId(req.query.detailsId)},(err, doc) => {
-        if (err) {
-          res.status(500).json({ success: false, message: err });
-        } else {
-          res.json({ success: true, data: `Record successfully deleted` });
+    if (req.query.detailsId && _idValidation(req.query.detailsId)) {
+      db.details.remove(
+        { _id: new ObjectId(req.query.detailsId) },
+        (err, doc) => {
+          if (err) {
+            res.status(500).json({ success: false, message: err });
+          } else {
+            res.json({ success: true, data: `Record successfully deleted` });
+          }
         }
-      }
-    );
+      );
+    } else {
+      res.status(500).json({ success: false, message: `Invalid _id` });
+    }
   } catch (err) {
     res.status(500).json({ success: false, message: err });
   }
