@@ -3,11 +3,10 @@ const bodyParser = require("body-parser");
 const app = express();
 const cors = require("cors");
 const config = require("./config");
-const details = require('./routing/api');
-const checkList = require('./routing/api');
+const routing = require('./routing/index');
 app.use(bodyParser.json());
 app.use(cors());
-app.use('/api', details);
+app.use("/api", routing);
 
 
 app.listen(config.port, (err, res)=>{
