@@ -134,19 +134,6 @@ router.put("/", async (req, res) => {
 
 router.get("/", (req, res) => {
   try {
-    // let condition = {};
-    // if (req.query.technologiesId) {
-    //   condition = {
-    //     _id: new ObjectId(req.query.technologiesId),
-    //   };
-    // }
-    // db.technologies.find(condition, (err, doc) => {
-    //   if (err) {
-    //     res.status(500).json({ success: false, message: err });
-    //   } else {
-    //     res.json({ success: true, data: doc });
-    //   }
-    // });
     var pipeline = [
       {
         $lookup: {
@@ -154,9 +141,13 @@ router.get("/", (req, res) => {
           from: "technical_stack",
           pipeline: [
             { $match: { $expr: { $eq: ["$_id", "$$technicalStackObjId"] } } },
+            { $project: { _id: 0 } },
           ],
           as: "technical_stack",
         },
+      },
+      {
+        $unwind: "$technical_stack",
       },
     ];
     if (req.query.technicalStackId) {
@@ -164,7 +155,7 @@ router.get("/", (req, res) => {
         ...pipeline,
         {
           $match: {
-            "technical_stack._id": new ObjectId(req.query.technicalStackId),
+            "technicalStackId": req.query.technicalStackId,
           },
         },
       ];
