@@ -26,7 +26,7 @@ router.post(
   ],
   async (req, res) => {
     var errors = validationResult(req).array();
-    if(errors){
+    if(errors && errors.length){
       return res.status(400).json({ success: false, message: errors });
     }
     const data = req.body;
@@ -74,6 +74,7 @@ router.post(
         });
       }
     } catch (err) {
+      console.log(err);
       res.status(500).json({ success: false, message: err });
     }
   }
@@ -87,7 +88,7 @@ router.put(
   ],
   async (req, res) => {
     var errors = validationResult(req).array();
-    if (errors) {
+    if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
     const data = req.body;
