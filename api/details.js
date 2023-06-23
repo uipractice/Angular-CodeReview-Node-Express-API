@@ -85,6 +85,7 @@ router.put(
   [
     check("account").not().isEmpty().withMessage("account is required"),
     check("project").not().isEmpty().withMessage("project is required"),
+    check("_id").not().isEmpty().withMessage("_id is required"),
   ],
   async (req, res) => {
     var errors = validationResult(req).array();
@@ -116,12 +117,10 @@ router.put(
               }
             });
           } else {
-            res
-              .status(500)
-              .json({
-                success: false,
-                message: `This record already completed`,
-              });
+            res.status(500).json({
+              success: false,
+              message: `This record already completed`,
+            });
           }
         } else {
           res
