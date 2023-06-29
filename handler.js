@@ -31,7 +31,7 @@ app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", routing);
 app.get("/", (req, res) => {
-  res.json("Hello i am calling1111111111111");
+  res.json("Hello i am calling2222222");
 });
 const serverless = require("serverless-http");
 module.exports.hello = serverless(app);
