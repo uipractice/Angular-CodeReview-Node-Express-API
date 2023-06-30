@@ -4,6 +4,7 @@ const app = express();
 const cors = require("cors");
 const config = require("./config");
 const routing = require("./routing/index");
+const serverless = require("serverless-http");
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", routing);
@@ -27,3 +28,5 @@ process
   .on("warning", (warning) => {
     console.log(warning.stack);
   });
+
+module.exports.handler = serverless(app);
