@@ -32,10 +32,17 @@ router.post("/",(req, res) => {
 
 router.get("/", (req, res) => {
   try {
+    const type = req.query.type;
     db.check_list_questions.find({}, (err, doc) => {
       if (err) {
         res.status(500).json({ success: false, message: err });
       } else {
+        for(let i = 0; i < doc[0].data.length; i++){
+          if(doc[0].data[i].key == type){
+            doc[0].data = [doc[0].data[i]];
+            break;
+          }
+        }
         res.json({ success: true, data: doc });
       }
     });

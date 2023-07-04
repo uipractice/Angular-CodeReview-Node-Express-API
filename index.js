@@ -5,10 +5,12 @@ const cors = require("cors");
 const config = require("./config");
 const routing = require("./routing/index");
 const serverless = require("serverless-http");
+const swaggerUi = require("swagger-ui-express");
+const swaggerFile = require("./swagger_output.json");
 app.use(bodyParser.json());
 app.use(cors());
 app.use("/api", routing);
-
+app.use("/doc", swaggerUi.serve, swaggerUi.setup(swaggerFile));
 app.listen(config.port, (err, res) => {
   if (err) {
     console.log(`Getting error while listining the port`);
