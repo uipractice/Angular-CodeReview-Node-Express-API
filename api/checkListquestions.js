@@ -48,7 +48,7 @@ router.get(
       return res.status(400).json({ success: false, message: errors });
     }
     try {
-      const step = req.query.step;
+      const type = req.query.type;
       db.check_list_questions.find(
         {
           technologiesId: req.query.technologiesId,
@@ -58,8 +58,14 @@ router.get(
           if (err) {
             res.status(500).json({ success: false, message: err });
           } else {
-            if (step) {
-              doc[0].data = [doc[0].data[step - 1]];
+            if (type && doc.length && doc[0].data) {
+              for(let i = 0; i < doc[0].data.length; i++){
+                if(doc[0].data[i].key == type){
+                   doc[0].data = [doc[0].data[i]];
+                   break;
+                }
+              }
+             
             }
             res.json({ success: true, data: doc });
           }

@@ -50,7 +50,7 @@ router.get(
       db.left_nav.find(
         {
           technologiesId: req.query.technologiesId,
-          technicalStackId: req.query.technicalStackId,
+          technicalStackId: req.query.technicalStackId
         },
         (err, doc) => {
           if (err) {
