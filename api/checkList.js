@@ -57,24 +57,22 @@ router.post(
 
 router.put("/", (req, res) => {
   const data = req.body;
-  const id = req.body._id;
-  delete data._id;
   try {
-    db.check_list.update(
-      { _id: new ObjectId(id) },
-      { $set: { ...data } },
-      { upsert: true },
-      (err, doc) => {
-        if (err) {
+    db.check_list.updateMany(
+      {
+        detailsId: req.body.detailsId,
+        "data.key":  req.body.data[0].key,
+      },
+      { $set: { "data.$.value": req.body.data[0].value } }, (err, doc)=>{
+        if(err){
           res.status(500).json({ success: false, message: err });
         } else {
           res.json({
             success: true,
             message: "Check list data successfully updated",
-          });
+          });  
         }
-      }
-    );
+      });
   } catch (err) {
     res.status(500).json({ success: false, message: err });
   }
