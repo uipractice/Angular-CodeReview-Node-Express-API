@@ -17,21 +17,29 @@ const tokenCreation = (data) => {
 };
 
 const tokenVerify = (req, res, next) => {
-  var token = req.headers.authorization;
-  token = token.replace("Bearer ", "");
+  
+  
   try {
-    jwt.verify(token, "secret", (err, decode) => {
-      if (err) {
-        res.status(401).json(err);
-      } else {
-        let email = req.body.email || req.query.email;
-        if (decode.email == email) {
-          next();
+    var token = req.headers.authorization;
+    if (token) {
+      token = token.replace("Bearer ", "");
+      jwt.verify(token, "secret", (err, decode) => {
+        if (err) {
+          res.status(401).json(err);
         } else {
-          res.status(401).json(`Invalid JWT user`);
+          let email = req.body.email || req.query.email;
+          if (decode.email == email) {
+            req.decode = decode;
+            next();
+          } else {
+            res.status(401).json(`Invalid JWT user`);
+          }
         }
-      }
-    });
+      });
+    } else {
+      res.status(401).json(`Invalid token`);
+    }
+    
   } catch (err) {
     res.status(401).json(err);
   }
