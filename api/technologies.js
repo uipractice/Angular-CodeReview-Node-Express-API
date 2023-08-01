@@ -2,6 +2,7 @@ const router = require("express").Router();
 const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const _idValidation = require("../help/_idValidation");
+const { check, validationResult } = require("express-validator");
 
 const getTechnologies = (condition) => {
   return new Promise((resolve, reject) => {
@@ -35,45 +36,60 @@ const getTechnicalStack = (condition) => {
   });
 };
 
-router.post("/", async (req, res) => {
-  const data = req.body;
-  try {
-    if (data.technicalStackId && _idValidation(data.technicalStackId)) {
-      const technicalStackData = await getTechnicalStack({
-        _id: new ObjectId(data.technicalStackId),
-      });
-      if (technicalStackData) {
-        const technologiesData = await getTechnologies({ name: data.name });
-        if (technologiesData) {
+router.post(
+  "/",
+  [
+    check("name").not().isEmpty().withMessage("name is required"),
+    check("technicalStackId")
+      .not()
+      .isEmpty()
+      .withMessage("technicalStackId is required"),
+    check("isSonar").not().isEmpty().withMessage("isSonar is required"),
+  ],
+  async (req, res) => {
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
+    }
+    const data = req.body;
+    try {
+      if (data.technicalStackId && _idValidation(data.technicalStackId)) {
+        const technicalStackData = await getTechnicalStack({
+          _id: new ObjectId(data.technicalStackId),
+        });
+        if (technicalStackData) {
+          const technologiesData = await getTechnologies({ name: data.name });
+          if (technologiesData) {
+            res
+              .status(500)
+              .json({ success: false, message: `This name already existed` });
+          } else {
+            db.technologies.insert(data, (err, doc) => {
+              if (err) {
+                res.status(500).json({ success: false, message: err });
+              } else {
+                res.json({
+                  success: true,
+                  message: "Technologies data successfully inserted",
+                });
+              }
+            });
+          }
+        } else {
           res
             .status(500)
-            .json({ success: false, message: `This name already existed` });
-        } else {
-          db.technologies.insert(data, (err, doc) => {
-            if (err) {
-              res.status(500).json({ success: false, message: err });
-            } else {
-              res.json({
-                success: true,
-                message: "Technologies data successfully inserted",
-              });
-            }
-          });
+            .json({ success: false, message: `Invalid technical stack` });
         }
       } else {
         res
           .status(500)
-          .json({ success: false, message: `Invalid technical stack` });
+          .json({ success: false, message: `Invalid technicalStackId` });
       }
-    } else {
-      res
-        .status(500)
-        .json({ success: false, message: `Invalid technicalStackId` });
+    } catch (err) {
+      res.status(500).json({ success: false, message: err });
     }
-  } catch (err) {
-    res.status(500).json({ success: false, message: err });
   }
-});
+);
 
 router.put("/", async (req, res) => {
   const data = req.body;

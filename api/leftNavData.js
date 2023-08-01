@@ -3,31 +3,43 @@ const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const { check, validationResult } = require("express-validator");
 const _idValidation = require("../help/_idValidation");
+const getDate = require("../help/getDate");
 
-router.post("/", (req, res) => {
-  const data = req.body;
-  const date = new Date();
-  const dateNow = `${date.getDate()}/${
-    date.getMonth() + 1
-  }/${date.getFullYear()}`;
-  try {
-    data.createdDate = dateNow;
-    data.updatedDate = dateNow;
-    db.left_nav.insert(data, (err, doc) => {
-      if (err) {
-        res.status(500).json({ success: false, message: err });
-      } else {
-        res.json({
-          success: true,
-          message: "Left nav data successfully inserted",
-        });
-      }
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({ success: false, message: err });
+router.post(
+  "/",
+  [
+    check("leftNav").not().isEmpty().withMessage("leftNav is required"),
+    check("technicalStackId")
+      .not()
+      .isEmpty()
+      .withMessage("technicalStackId is required"),
+    check("technologiesId")
+      .not()
+      .isEmpty()
+      .withMessage("technologiesId is required"),
+  ],
+  (req, res) => {
+    const data = ({ leftNav, technicalStackId, technologiesId } = req.body);
+    const dateNow = getDate();
+    try {
+      data.createdDate = dateNow;
+      data.updatedDate = dateNow;
+      db.left_nav.insert(data, (err, doc) => {
+        if (err) {
+          res.status(500).json({ success: false, message: err });
+        } else {
+          res.json({
+            success: true,
+            message: "Left nav data successfully inserted",
+          });
+        }
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err });
+    }
   }
-});
+);
 
 router.get(
   "/",

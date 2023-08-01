@@ -3,14 +3,12 @@ const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const { check, validationResult } = require("express-validator");
 const _idValidation = require("../help/_idValidation");
+const getDate = require("../help/getDate");
 
 router.post("/",(req, res) => {
-    const data = req.body;
-    const date = new Date();
-    const dateNow = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
     try {
+        const data = req.body;
+        const dateNow = getDate();
         data.createdDate = dateNow;
         data.updatedDate = dateNow;
         db.check_list_questions.insert(data, (err, doc) => {

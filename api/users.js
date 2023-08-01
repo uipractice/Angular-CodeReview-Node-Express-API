@@ -25,11 +25,25 @@ router.post(
   [
     check("firstName").not().isEmpty().withMessage("First name is required"),
     check("lastName").not().isEmpty().withMessage("Last name is required"),
-    check("email").not().isEmpty().withMessage("Email is required").isEmail().withMessage("Valid email is required"),
-    check("isActive").not().isEmpty().withMessage("Is active is required").isIn([1, 0]).withMessage("Is active should be 1 or 0"),
+    check("email")
+      .not()
+      .isEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Valid email is required"),
+    check("isActive")
+      .not()
+      .isEmpty()
+      .withMessage("Is active is required")
+      .isIn([1, 0])
+      .withMessage("Is active should be 1 or 0"),
     check("password").not().isEmpty().withMessage("Password is required"),
-    check("role").not().isEmpty().withMessage("role is required").isIn(["admin", "user"]).withMessage("Role should be admin or user"),
-  
+    check("role")
+      .not()
+      .isEmpty()
+      .withMessage("role is required")
+      .isIn(["admin", "user"])
+      .withMessage("Role should be admin or user"),
   ],
   async (req, res) => {
     var errors = validationResult(req).array();
@@ -38,14 +52,16 @@ router.post(
     }
     try {
       if (!(await getUser({ email: req.body.email }))) {
-        const data = ({ firstName, lastName, isActive, email, role } = req.body);
+        const data = ({ firstName, lastName, isActive, email, role } =
+          req.body);
         const salt = await genSalt();
         const hash = await genHash(salt, req.body.password);
         const dateNow = getDate();
         data.createdDate = dateNow;
         data.updatedDate = dateNow;
         data.password = hash;
-        data.salt = salt; 
+        data.salt = salt;
+        data.createdBy = req.decode._id;
         db.users.insert(data, (err, doc) => {
           if (err) {
             res.status(500).json({ success: false, message: err });
@@ -68,5 +84,28 @@ router.post(
   }
 );
 
-
+router.get("/", async (req, res) => {
+  try {
+    let condition = {};
+    if (req.query.userId) {
+      condition = {
+        _id: new ObjectId(req.query.userId)
+      };
+    }
+    if (req.query.email) {
+      condition = {
+        email: req.query.email,
+      };
+    }
+    db.users.find(condition, { salt: 0, password: 0 }, (err, doc) => {
+      if (err) {
+        res.status(500).json({ success: false, message: err });
+      } else {
+        res.json({ success: true, data: doc });
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err });
+  }
+});
 module.exports = router;

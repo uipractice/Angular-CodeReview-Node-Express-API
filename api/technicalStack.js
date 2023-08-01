@@ -2,6 +2,8 @@ const router = require("express").Router();
 const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const _idValidation = require("../help/_idValidation");
+const { check, validationResult } = require("express-validator");
+
 
 const getTechnicalStack = (condition) => {
   return new Promise((resolve, reject) => {
@@ -19,39 +21,60 @@ const getTechnicalStack = (condition) => {
   });
 };
 
-router.post("/", async (req, res) => {
-  const data = req.body;
-  try {
-    const condition = { name: data.name };
-    const technicalStackData = await getTechnicalStack(condition);
-    if (technicalStackData) {
-      res
-        .status(500)
-        .json({ success: false, message: `This name already existed` });
-    } else {
-      db.technical_stack.insert(data, (err, doc) => {
-        if (err) {
-          res.status(500).json({ success: false, message: err });
-        } else {
-          res.json({
-            success: true,
-            message: "Technical stack data successfully inserted",
-          });
-        }
-      });
+router.post(
+  "/",
+  [
+    check("name").not().isEmpty().withMessage("name is required")
+  ],
+  async (req, res) => {
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
     }
-  } catch (err) {
-    res.status(500).json({ success: false, message: err });
+    const data = {name} = req.body;
+    try {
+      const condition = { data };
+      const technicalStackData = await getTechnicalStack(condition);
+      if (technicalStackData) {
+        res
+          .status(500)
+          .json({ success: false, message: `This name already existed` });
+      } else {
+        db.technical_stack.insert(data, (err, doc) => {
+          if (err) {
+            res.status(500).json({ success: false, message: err });
+          } else {
+            res.json({
+              success: true,
+              message: "Technical stack data successfully inserted",
+            });
+          }
+        });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: err });
+    }
   }
-});
+);
 
 
-router.put("/", async (req, res) => {
-  const data = req.body;
-  const id = req.body._id;
-  delete data._id;
-  try {
-    if(id && _idValidation(id)){
+router.put(
+  "/",
+  [
+    check("name").not().isEmpty().withMessage("name is required"),
+    check("_id").not().isEmpty().withMessage("id is required"),
+  ],
+  async (req, res) => {
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
+    }
+
+    const data = {name, _id} = req.body;
+    const id = req.body._id;
+    delete data._id;
+    try {
+      if (id && _idValidation(id)) {
         const condition = { _id: new ObjectId(id) };
         const technicalStackData = await getTechnicalStack(condition);
         if (technicalStackData) {
@@ -74,14 +97,14 @@ router.put("/", async (req, res) => {
             .status(500)
             .json({ success: false, message: `Record not found in database` });
         }
-    } else {
+      } else {
         res.status(500).json({ success: false, message: `Invalid _id` });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: err });
     }
-    
-  } catch (err) {
-    res.status(500).json({ success: false, message: err });
   }
-});
+);
 
 
 router.get("/", (req, res) => {
@@ -90,7 +113,7 @@ router.get("/", (req, res) => {
     if (req.query.technicalStackId) {
       condition = {
         _id: new ObjectId(req.query.technicalStackId),
-      };
+      };    
     }
     db.technical_stack.find(condition, (err, doc) => {
       if (err) {

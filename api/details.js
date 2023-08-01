@@ -3,6 +3,7 @@ const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const { check, validationResult } = require("express-validator");
 const _idValidation = require("../help/_idValidation");
+const getDate = require("../help/getDate");
 const getDetils = (condition) => {
   return new Promise((resolve, reject) => {
     try {
@@ -22,18 +23,41 @@ router.post(
   "/",
   [
     check("account").not().isEmpty().withMessage("account is required"),
-    check("project").not().isEmpty().withMessage("project is required")
+    check("project").not().isEmpty().withMessage("project is required"),
+    check("developers").not().isEmpty().withMessage("developers is required"),
+    check("projectLead").not().isEmpty().withMessage("projectLead is required"),
+    check("reviewersName")
+      .not()
+      .isEmpty()
+      .withMessage("reviewersName is required"),
+    check("technicalStackId")
+      .not()
+      .isEmpty()
+      .withMessage("technicalStackId is required"),
+    check("technologiesId")
+      .not()
+      .isEmpty()
+      .withMessage("technologiesId is required"),
   ],
   async (req, res) => {
     var errors = validationResult(req).array();
-    if(errors && errors.length){
+    if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-    const data = req.body;
-    const date = new Date();
-    const dateNow = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
+    const data = ({
+      account,
+      project,
+      developers,
+      projectLead,
+      reviewersName,
+      status,
+      technicalStackId,
+      technologiesId,
+      storyId,
+      reviewPackagesandFiles,
+      codeReviewComments,
+    } = req.body);
+    const dateNow = getDate();
     try {
       const condition = {
         account: data.account,
@@ -62,6 +86,7 @@ router.post(
       } else {
         data.createdDate = dateNow;
         data.updatedDate = dateNow;
+        data.createdBy = req.decode._id;
         db.details.insert(data, (err, doc) => {
           if (err) {
             res.status(500).json({ success: false, message: err });
@@ -83,8 +108,22 @@ router.post(
 router.put(
   "/",
   [
-    check("account").not().isEmpty().withMessage("account is required"),
+     check("account").not().isEmpty().withMessage("account is required"),
     check("project").not().isEmpty().withMessage("project is required"),
+    check("developers").not().isEmpty().withMessage("developers is required"),
+    check("projectLead").not().isEmpty().withMessage("projectLead is required"),
+    check("reviewersName")
+      .not()
+      .isEmpty()
+      .withMessage("reviewersName is required"),
+    check("technicalStackId")
+      .not()
+      .isEmpty()
+      .withMessage("technicalStackId is required"),
+    check("technologiesId")
+      .not()
+      .isEmpty()
+      .withMessage("technologiesId is required"),
     check("_id").not().isEmpty().withMessage("_id is required"),
   ],
   async (req, res) => {
@@ -92,13 +131,21 @@ router.put(
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-    const data = req.body;
+   const data = ({
+     account,
+     project,
+     developers,
+     projectLead,
+     reviewersName,
+     status,
+     technicalStackId,
+     technologiesId,
+     storyId,
+     reviewPackagesandFiles,
+     codeReviewComments,
+   } = req.body);
     const id = req.body._id;
-    const date = new Date();
-    const dateNow = `${date.getDate()}/${
-      date.getMonth() + 1
-    }/${date.getFullYear()}`;
-    delete data._id;
+    const dateNow = getDate();
     try {
       if (_idValidation(id)) {
         const condition = { _id: new ObjectId(id) };

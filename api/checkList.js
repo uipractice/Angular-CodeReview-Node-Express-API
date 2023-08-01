@@ -36,6 +36,7 @@ router.post(
               }
             );
           } else {
+            data.createdBy = req.decode._id;
             db.check_list.insert(data, (err, doc) => {
               if (err) {
                 res.status(500).json({ success: false, message: err });
@@ -55,28 +56,40 @@ router.post(
   }
 );
 
-router.put("/", (req, res) => {
-  const data = req.body;
-  try {
-    db.check_list.updateMany(
-      {
-        detailsId: req.body.detailsId,
-        "data.key":  req.body.data[0].key,
-      },
-      { $set: { "data.$.value": req.body.data[0].value } }, (err, doc)=>{
-        if(err){
-          res.status(500).json({ success: false, message: err });
-        } else {
-          res.json({
-            success: true,
-            message: "Check list data successfully updated",
-          });  
+router.put(
+  "/",
+  [
+    check("detailsId").not().isEmpty().withMessage("detailsId is required"),
+    check("data").not().isEmpty().withMessage("data is required"),
+  ],
+  async (req, res) => {
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
+    }
+    try {
+      db.check_list.updateMany(
+        {
+          detailsId: req.body.detailsId,
+          "data.key": req.body.data[0].key,
+        },
+        { $set: { "data.$.value": req.body.data[0].value } },
+        (err, doc) => {
+          if (err) {
+            res.status(500).json({ success: false, message: err });
+          } else {
+            res.json({
+              success: true,
+              message: "Check list data successfully updated",
+            });
+          }
         }
-      });
-  } catch (err) {
-    res.status(500).json({ success: false, message: err });
+      );
+    } catch (err) {
+      res.status(500).json({ success: false, message: err });
+    }
   }
-});
+);
 
 router.get("/", (req, res) => {
   try {
