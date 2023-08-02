@@ -14,6 +14,8 @@ const { tokenVerify } = require("../hooks/authentication");
 
 const hasPermission = require("../hooks/permissionManager");
 
+router.use("/login", login);
+
 router.use("/details", tokenVerify, details);
 
 router.use("/checklist", tokenVerify, checklist);
@@ -37,6 +39,6 @@ router.use("/users", tokenVerify, hasPermission(["admin"]), users);
 
 router.use("/user", tokenVerify,  user);
 
-router.use("/login", login);
+
 
 module.exports = router;
