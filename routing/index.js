@@ -29,7 +29,6 @@ router.use("/technologies", tokenVerify, technologies);
 router.use(
   "/checkListQuestions",
   tokenVerify,
-  hasPermission(["admin"]),
   checkListQuestions
 );
 
