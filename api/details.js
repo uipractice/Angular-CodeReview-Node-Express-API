@@ -131,19 +131,19 @@ router.put(
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-   const data = ({
-     account,
-     project,
-     developers,
-     projectLead,
-     reviewersName,
-     status,
-     technicalStackId,
-     technologiesId,
-     storyId,
-     reviewPackagesandFiles,
-     codeReviewComments,
-   } = req.body);
+   const data = {
+     account: req.body.account,
+     project: req.body.project,
+     developers: req.body.developers,
+     projectLead: req.body.projectLead,
+     reviewersName: req.body.reviewersName,
+     status: req.body.status,
+     technicalStackId: req.body.technicalStackId,
+     technologiesId: req.body.technologiesId,
+     storyId: req.body.storyId,
+     reviewPackagesandFiles: req.body.reviewPackagesandFiles,
+     codeReviewComments: req.body.codeReviewComments,
+   };
     const id = req.body._id;
     const dateNow = getDate();
     try {

@@ -84,6 +84,72 @@ router.post(
   }
 );
 
+router.put(
+  "/",
+  [
+    check("firstName").not().isEmpty().withMessage("First name is required"),
+    check("lastName").not().isEmpty().withMessage("Last name is required"),
+    check("email")
+      .not()
+      .isEmpty()
+      .withMessage("Email is required")
+      .isEmail()
+      .withMessage("Valid email is required"),
+    check("isActive")
+      .not()
+      .isEmpty()
+      .withMessage("Is active is required")
+      .isIn([1, 0])
+      .withMessage("Is active should be 1 or 0"),
+    check("role")
+      .not()
+      .isEmpty()
+      .withMessage("role is required")
+      .isIn(["admin", "user"])
+      .withMessage("Role should be admin or user"),
+    check("_id").not().isEmpty().withMessage("_id is required"),
+  ],
+  async (req, res) => {
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
+    }
+    try {
+      if (_idValidation(req.body._id)) {
+        const condition = { _id: new ObjectId(req.body._id) };
+        if (await getUser(condition)) {
+          const data = {
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            isActive: req.body.isActive,
+            role: req.body.role
+          }
+          const dateNow = getDate();
+          data.updatedDate = dateNow;
+          db.users.update(condition, { $set: { ...data } }, (err, doc) => {
+            if (err) {
+              console.log(err);
+              res.status(500).json({ success: false, message: err });
+            } else {
+              res.json({
+                success: true,
+                message: "User successfully updated",
+              });
+            }
+          });
+        } else {
+          res.status(500).json({ success: false, message: `User not existed` });
+        }
+      } else {
+        res.status(500).json({ success: false, message: `Invalid _id` });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err });
+    }
+  }
+);
+
 router.get("/", async (req, res) => {
   try {
     let condition = {};
