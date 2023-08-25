@@ -10,11 +10,15 @@ router.post(
     check("data").not().isEmpty().withMessage("data is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['check-list']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-    const data = req.body;
+    const data ={
+      data : req.body.data,
+      detailsId: req.body.detailsId
+    };
     try {
       db.check_list.find({ detailsId: data.detailsId }, (err, checkListDoc) => {
         if (err) {
@@ -63,6 +67,7 @@ router.put(
     check("data").not().isEmpty().withMessage("data is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['check-list']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
@@ -92,6 +97,7 @@ router.put(
 );
 
 router.get("/", (req, res) => {
+  // #swagger.tags = ['check-list']
   try {
     var condition = {};
     if (req.query.detailsId) {

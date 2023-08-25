@@ -16,6 +16,9 @@
   "paths": {
     "/login/": {
       "post": {
+        "tags": [
+          "login"
+        ],
         "description": "",
         "responses": {
           "200": {
@@ -52,6 +55,9 @@
     },
     "/details/": {
       "post": {
+        "tags": [
+          "details"
+        ],
         "description": "",
         "parameters": [
           {
@@ -75,9 +81,56 @@
           "500": {
             "description": "Internal Server Error"
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "account": {
+                    "example": "any"
+                  },
+                  "project": {
+                    "example": "any"
+                  },
+                  "developers": {
+                    "example": "any"
+                  },
+                  "projectLead": {
+                    "example": "any"
+                  },
+                  "reviewersName": {
+                    "example": "any"
+                  },
+                  "status": {
+                    "example": "any"
+                  },
+                  "technicalStackId": {
+                    "example": "any"
+                  },
+                  "technologiesId": {
+                    "example": "any"
+                  },
+                  "storyId": {
+                    "example": "any"
+                  },
+                  "reviewPackagesandFiles": {
+                    "example": "any"
+                  },
+                  "codeReviewComments": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "put": {
+        "tags": [
+          "details"
+        ],
         "description": "",
         "parameters": [
           {
@@ -151,6 +204,9 @@
         }
       },
       "get": {
+        "tags": [
+          "details"
+        ],
         "description": "",
         "parameters": [
           {
@@ -181,6 +237,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "details"
+        ],
         "description": "",
         "parameters": [
           {
@@ -213,6 +272,9 @@
     },
     "/checklist/": {
       "post": {
+        "tags": [
+          "check-list"
+        ],
         "description": "",
         "parameters": [
           {
@@ -243,13 +305,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "data": {
+                    "example": "any"
+                  },
                   "detailsId": {
-                    "example": "any"
-                  },
-                  "req": {
-                    "example": "any"
-                  },
-                  "createdBy": {
                     "example": "any"
                   }
                 }
@@ -259,6 +318,9 @@
         }
       },
       "put": {
+        "tags": [
+          "check-list"
+        ],
         "description": "",
         "parameters": [
           {
@@ -302,6 +364,9 @@
         }
       },
       "get": {
+        "tags": [
+          "check-list"
+        ],
         "description": "",
         "parameters": [
           {
@@ -334,6 +399,9 @@
     },
     "/options/": {
       "get": {
+        "tags": [
+          "options"
+        ],
         "description": "",
         "parameters": [
           {
@@ -359,6 +427,9 @@
     },
     "/technicalStack/": {
       "post": {
+        "tags": [
+          "technical-stack"
+        ],
         "description": "",
         "parameters": [
           {
@@ -399,6 +470,9 @@
         }
       },
       "put": {
+        "tags": [
+          "technical-stack"
+        ],
         "description": "",
         "parameters": [
           {
@@ -442,6 +516,9 @@
         }
       },
       "get": {
+        "tags": [
+          "technical-stack"
+        ],
         "description": "",
         "parameters": [
           {
@@ -472,6 +549,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "technical-stack"
+        ],
         "description": "",
         "parameters": [
           {
@@ -504,6 +584,9 @@
     },
     "/technologies/": {
       "post": {
+        "tags": [
+          "technologies"
+        ],
         "description": "",
         "parameters": [
           {
@@ -547,6 +630,9 @@
         }
       },
       "put": {
+        "tags": [
+          "technologies"
+        ],
         "description": "",
         "parameters": [
           {
@@ -574,10 +660,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "_id": {
+                  "name": {
                     "example": "any"
                   },
                   "technicalStackId": {
+                    "example": "any"
+                  },
+                  "_id": {
                     "example": "any"
                   }
                 }
@@ -587,6 +676,9 @@
         }
       },
       "get": {
+        "tags": [
+          "technologies"
+        ],
         "description": "",
         "parameters": [
           {
@@ -617,6 +709,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "technologies"
+        ],
         "description": "",
         "parameters": [
           {
@@ -649,6 +744,9 @@
     },
     "/checkListQuestions/": {
       "post": {
+        "tags": [
+          "check-list-questions"
+        ],
         "description": "",
         "parameters": [
           {
@@ -689,6 +787,9 @@
         }
       },
       "get": {
+        "tags": [
+          "check-list-questions"
+        ],
         "description": "",
         "parameters": [
           {
@@ -736,6 +837,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "check-list-questions"
+        ],
         "description": "",
         "parameters": [
           {
@@ -768,6 +872,9 @@
     },
     "/lefNavData/": {
       "post": {
+        "tags": [
+          "left-nav-data"
+        ],
         "description": "",
         "parameters": [
           {
@@ -788,9 +895,32 @@
           "500": {
             "description": "Internal Server Error"
           }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "leftNav": {
+                    "example": "any"
+                  },
+                  "technicalStackId": {
+                    "example": "any"
+                  },
+                  "technologiesId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "get": {
+        "tags": [
+          "left-nav-data"
+        ],
         "description": "",
         "parameters": [
           {
@@ -831,6 +961,9 @@
         }
       },
       "delete": {
+        "tags": [
+          "left-nav-data"
+        ],
         "description": "",
         "parameters": [
           {
@@ -863,6 +996,9 @@
     },
     "/users/": {
       "post": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -896,6 +1032,18 @@
                   "email": {
                     "example": "any"
                   },
+                  "firstName": {
+                    "example": "any"
+                  },
+                  "lastName": {
+                    "example": "any"
+                  },
+                  "isActive": {
+                    "example": "any"
+                  },
+                  "role": {
+                    "example": "any"
+                  },
                   "password": {
                     "example": "any"
                   }
@@ -906,6 +1054,9 @@
         }
       },
       "put": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -958,6 +1109,9 @@
         }
       },
       "get": {
+        "tags": [
+          "Users"
+        ],
         "description": "",
         "parameters": [
           {
@@ -997,6 +1151,9 @@
     },
     "/user/": {
       "get": {
+        "tags": [
+          "user"
+        ],
         "description": "",
         "parameters": [
           {

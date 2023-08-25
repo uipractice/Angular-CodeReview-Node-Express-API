@@ -46,14 +46,14 @@ router.post(
       .withMessage("Role should be admin or user"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['Users']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
     try {
       if (!(await getUser({ email: req.body.email }))) {
-        const data = ({ firstName, lastName, isActive, email, role } =
-          req.body);
+        const data = { firstName: req.body.firstName, lastName:req.body.lastName, isActive: req.body.isActive, email: req.body.email, role: req.body.role };
         const salt = await genSalt();
         const hash = await genHash(salt, req.body.password);
         const dateNow = getDate();
@@ -110,6 +110,7 @@ router.put(
     check("_id").not().isEmpty().withMessage("_id is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['Users']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
@@ -122,8 +123,8 @@ router.put(
             firstName: req.body.firstName,
             lastName: req.body.lastName,
             isActive: req.body.isActive,
-            role: req.body.role
-          }
+            role: req.body.role,
+          };
           const dateNow = getDate();
           data.updatedDate = dateNow;
           db.users.update(condition, { $set: { ...data } }, (err, doc) => {
@@ -151,11 +152,12 @@ router.put(
 );
 
 router.get("/", async (req, res) => {
+  // #swagger.tags = ['Users']
   try {
     let condition = {};
     if (req.query.userId) {
       condition = {
-        _id: new ObjectId(req.query.userId)
+        _id: new ObjectId(req.query.userId),
       };
     }
     if (req.query.email) {

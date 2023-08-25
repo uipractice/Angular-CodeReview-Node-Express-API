@@ -6,26 +6,27 @@ const _idValidation = require("../help/_idValidation");
 const getDate = require("../help/getDate");
 
 router.post("/",(req, res) => {
-    try {
-        const data = req.body;
-        const dateNow = getDate();
-        data.createdDate = dateNow;
-        data.updatedDate = dateNow;
-        db.check_list_questions.insert(data, (err, doc) => {
-          if (err) {
-            res.status(500).json({ success: false, message: err });
-          } else {
-            res.json({
-              success: true,
-              message: "Check list questions data successfully inserted",
-            });
-          }
+  // #swagger.tags = ['check-list-questions']
+  try {
+    const data = req.body;
+    const dateNow = getDate();
+    data.createdDate = dateNow;
+    data.updatedDate = dateNow;
+    db.check_list_questions.insert(data, (err, doc) => {
+      if (err) {
+        res.status(500).json({ success: false, message: err });
+      } else {
+        res.json({
+          success: true,
+          message: "Check list questions data successfully inserted",
         });
-    } catch (err) {
-      console.log(err);
-      res.status(500).json({ success: false, message: err });
-    }
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ success: false, message: err });
   }
+}
 );
 
 router.get(
@@ -41,6 +42,7 @@ router.get(
       .withMessage("technologiesId is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['check-list-questions']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
@@ -57,13 +59,12 @@ router.get(
             res.status(500).json({ success: false, message: err });
           } else {
             if (type && doc.length && doc[0].data) {
-              for(let i = 0; i < doc[0].data.length; i++){
-                if(doc[0].data[i].key == type){
-                   doc[0].data = [doc[0].data[i]];
-                   break;
+              for (let i = 0; i < doc[0].data.length; i++) {
+                if (doc[0].data[i].key == type) {
+                  doc[0].data = [doc[0].data[i]];
+                  break;
                 }
               }
-             
             }
             res.json({ success: true, data: doc });
           }
@@ -76,6 +77,7 @@ router.get(
 );
 
 router.delete("/", (req, res) => {
+  // #swagger.tags = ['check-list-questions']
   try {
     if (
       req.query.checkListQuestionsId &&

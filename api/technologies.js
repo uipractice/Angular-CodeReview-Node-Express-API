@@ -47,6 +47,7 @@ router.post(
     check("isSonar").not().isEmpty().withMessage("isSonar is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['technologies']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
@@ -92,10 +93,11 @@ router.post(
 );
 
 router.put("/", async (req, res) => {
-  const data = req.body;
+  const data ={name: req.body.name, technicalStackId: req.body.technicalStackId};
   const id = req.body._id;
   delete data._id;
   try {
+    // #swagger.tags = ['technologies']
     if (id && _idValidation(id)) {
       if (data.technicalStackId && _idValidation(data.technicalStackId)) {
         const condition = { _id: new ObjectId(id) };
@@ -150,6 +152,7 @@ router.put("/", async (req, res) => {
 
 router.get("/", (req, res) => {
   try {
+    // #swagger.tags = ['technologies']
     var pipeline = [
       {
         $lookup: {
@@ -171,7 +174,7 @@ router.get("/", (req, res) => {
         ...pipeline,
         {
           $match: {
-            "technicalStackId": req.query.technicalStackId,
+            technicalStackId: req.query.technicalStackId,
           },
         },
       ];
@@ -190,6 +193,7 @@ router.get("/", (req, res) => {
 
 router.delete("/", (req, res) => {
   try {
+    // #swagger.tags = ['technologies']
     db.technologies.remove(
       { _id: new ObjectId(req.query.technologiesId) },
       (err, doc) => {

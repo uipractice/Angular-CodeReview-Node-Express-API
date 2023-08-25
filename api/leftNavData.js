@@ -19,7 +19,12 @@ router.post(
       .withMessage("technologiesId is required"),
   ],
   (req, res) => {
-    const data = ({ leftNav, technicalStackId, technologiesId } = req.body);
+    // #swagger.tags = ['left-nav-data']
+    const data = {
+      leftNav: req.body.leftNav,
+      technicalStackId: req.body.technicalStackId,
+      technologiesId: req.body.technologiesId,
+    };
     const dateNow = getDate();
     try {
       data.createdDate = dateNow;
@@ -54,6 +59,7 @@ router.get(
       .withMessage("technologiesId is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['left-nav-data']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
@@ -62,7 +68,7 @@ router.get(
       db.left_nav.find(
         {
           technologiesId: req.query.technologiesId,
-          technicalStackId: req.query.technicalStackId
+          technicalStackId: req.query.technicalStackId,
         },
         (err, doc) => {
           if (err) {
@@ -79,6 +85,7 @@ router.get(
 );
 
 router.delete("/", (req, res) => {
+  // #swagger.tags = ['left-nav-data']
   try {
     if (req.query.leftNavId && _idValidation(req.query.leftNavId)) {
       db.left_nav.remove(

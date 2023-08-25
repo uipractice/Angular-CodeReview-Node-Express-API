@@ -3,6 +3,7 @@ const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 
 router.get("/", async (req, res) => {
+  // #swagger.tags = ['user']
   try {
     let condition = { _id: new ObjectId(req.decode._id) };
     db.users.findOne(condition, { salt: 0, password: 0 }, (err, doc) => {

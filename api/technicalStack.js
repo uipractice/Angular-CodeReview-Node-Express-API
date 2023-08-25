@@ -27,11 +27,12 @@ router.post(
     check("name").not().isEmpty().withMessage("name is required")
   ],
   async (req, res) => {
+    // #swagger.tags = ['technical-stack']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-    const data = {name} = req.body;
+    const data = { name: req.body.name };
     try {
       const condition = { data };
       const technicalStackData = await getTechnicalStack(condition);
@@ -65,12 +66,13 @@ router.put(
     check("_id").not().isEmpty().withMessage("id is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['technical-stack']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
 
-    const data = {name, _id} = req.body;
+    const data = ({ name, _id } = req.body);
     const id = req.body._id;
     delete data._id;
     try {
@@ -108,12 +110,13 @@ router.put(
 
 
 router.get("/", (req, res) => {
+  // #swagger.tags = ['technical-stack']
   try {
     let condition = {};
     if (req.query.technicalStackId) {
       condition = {
         _id: new ObjectId(req.query.technicalStackId),
-      };    
+      };
     }
     db.technical_stack.find(condition, (err, doc) => {
       if (err) {
@@ -128,6 +131,7 @@ router.get("/", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
+  // #swagger.tags = ['technical-stack']
   try {
     if (
       req.query.technicalStackId &&
@@ -148,7 +152,6 @@ router.delete("/", (req, res) => {
         .status(500)
         .json({ success: false, message: `Invalid technicalStackId` });
     }
-    
   } catch (err) {
     res.status(500).json({ success: false, message: err });
   }

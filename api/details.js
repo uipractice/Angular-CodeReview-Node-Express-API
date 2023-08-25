@@ -40,23 +40,24 @@ router.post(
       .withMessage("technologiesId is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['details']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-    const data = ({
-      account,
-      project,
-      developers,
-      projectLead,
-      reviewersName,
-      status,
-      technicalStackId,
-      technologiesId,
-      storyId,
-      reviewPackagesandFiles,
-      codeReviewComments,
-    } = req.body);
+    const data = {
+      account: req.body.account,
+      project: req.body.project,
+      developers: req.body.developers,
+      projectLead: req.body.projectLead,
+      reviewersName: req.body.reviewersName,
+      status: req.body.status,
+      technicalStackId: req.body.technicalStackId,
+      technologiesId: req.body.technologiesId,
+      storyId: req.body.storyId,
+      reviewPackagesandFiles: req.body.reviewPackagesandFiles,
+      codeReviewComments: req.body.codeReviewComments,
+    };
     const dateNow = getDate();
     try {
       const condition = {
@@ -127,23 +128,24 @@ router.put(
     check("_id").not().isEmpty().withMessage("_id is required"),
   ],
   async (req, res) => {
+    // #swagger.tags = ['details']
     var errors = validationResult(req).array();
     if (errors && errors.length) {
       return res.status(400).json({ success: false, message: errors });
     }
-   const data = {
-     account: req.body.account,
-     project: req.body.project,
-     developers: req.body.developers,
-     projectLead: req.body.projectLead,
-     reviewersName: req.body.reviewersName,
-     status: req.body.status,
-     technicalStackId: req.body.technicalStackId,
-     technologiesId: req.body.technologiesId,
-     storyId: req.body.storyId,
-     reviewPackagesandFiles: req.body.reviewPackagesandFiles,
-     codeReviewComments: req.body.codeReviewComments,
-   };
+    const data = {
+      account: req.body.account,
+      project: req.body.project,
+      developers: req.body.developers,
+      projectLead: req.body.projectLead,
+      reviewersName: req.body.reviewersName,
+      status: req.body.status,
+      technicalStackId: req.body.technicalStackId,
+      technologiesId: req.body.technologiesId,
+      storyId: req.body.storyId,
+      reviewPackagesandFiles: req.body.reviewPackagesandFiles,
+      codeReviewComments: req.body.codeReviewComments,
+    };
     const id = req.body._id;
     const dateNow = getDate();
     try {
@@ -184,6 +186,7 @@ router.put(
 );
 
 router.get("/", (req, res) => {
+  // #swagger.tags = ['details']
   try {
     var pipeline = [
       {
@@ -240,6 +243,7 @@ router.get("/", (req, res) => {
 });
 
 router.delete("/", (req, res) => {
+  // #swagger.tags = ['details']
   try {
     if (req.query.detailsId && _idValidation(req.query.detailsId)) {
       db.details.remove(
