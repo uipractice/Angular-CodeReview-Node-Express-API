@@ -40,10 +40,6 @@ router.post(
   "/",
   [
     check("name").not().isEmpty().withMessage("name is required"),
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
     check("isSonar").not().isEmpty().withMessage("isSonar is required"),
   ],
   async (req, res) => {
@@ -54,11 +50,11 @@ router.post(
     }
     const data = req.body;
     try {
-      if (data.technicalStackId && _idValidation(data.technicalStackId)) {
-        const technicalStackData = await getTechnicalStack({
-          _id: new ObjectId(data.technicalStackId),
-        });
-        if (technicalStackData) {
+      // if (data.technicalStackId && _idValidation(data.technicalStackId)) {
+        // const technicalStackData = await getTechnicalStack({
+        //   _id: new ObjectId(data.technicalStackId),
+        // });
+        // if (technicalStackData) {
           const technologiesData = await getTechnologies({ name: data.name });
           if (technologiesData) {
             res
@@ -76,16 +72,16 @@ router.post(
               }
             });
           }
-        } else {
-          res
-            .status(500)
-            .json({ success: false, message: `Invalid technical stack` });
-        }
-      } else {
-        res
-          .status(500)
-          .json({ success: false, message: `Invalid technicalStackId` });
-      }
+        // } else {
+        //   res
+        //     .status(500)
+        //     .json({ success: false, message: `Invalid technical stack` });
+        // }
+      // } else {
+      //   res
+      //     .status(500)
+      //     .json({ success: false, message: `Invalid technicalStackId` });
+      // }
     } catch (err) {
       res.status(500).json({ success: false, message: err });
     }
@@ -93,20 +89,20 @@ router.post(
 );
 
 router.put("/", async (req, res) => {
-  const data ={name: req.body.name, technicalStackId: req.body.technicalStackId};
+  const data ={name: req.body.name};
   const id = req.body._id;
   delete data._id;
   try {
     // #swagger.tags = ['technologies']
     if (id && _idValidation(id)) {
-      if (data.technicalStackId && _idValidation(data.technicalStackId)) {
+      // if (data.technicalStackId && _idValidation(data.technicalStackId)) {
         const condition = { _id: new ObjectId(id) };
         const technologiesData = await getTechnologies(condition);
         if (technologiesData) {
-          const technicalStackData = await getTechnicalStack({
-            _id: new ObjectId(data.technicalStackId),
-          });
-          if (technicalStackData) {
+          // const technicalStackData = await getTechnicalStack({
+          //   _id: new ObjectId(data.technicalStackId),
+          // });
+          // if (technicalStackData) {
             db.technologies.update(
               condition,
               { $set: { ...data } },
@@ -121,24 +117,24 @@ router.put("/", async (req, res) => {
                 }
               }
             );
-          } else {
-            res.status(500).json({
-              success: false,
-              message: `Invalid technical stack`,
-            });
-          }
+          // } else {
+          //   res.status(500).json({
+          //     success: false,
+          //     message: `Invalid technical stack`,
+          //   });
+          // }
         } else {
           res.status(500).json({
             success: false,
             message: `Record not found in database`,
           });
         }
-      } else {
-        res.status(500).json({
-          success: false,
-          message: `Invalid technicalStackId`,
-        });
-      }
+      // } else {
+      //   res.status(500).json({
+      //     success: false,
+      //     message: `Invalid technicalStackId`,
+      //   });
+      // }
     } else {
       res.status(500).json({
         success: false,

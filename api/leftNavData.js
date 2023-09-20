@@ -9,10 +9,10 @@ router.post(
   "/",
   [
     check("leftNav").not().isEmpty().withMessage("leftNav is required"),
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
+    // check("technicalStackId")
+    //   .not()
+    //   .isEmpty()
+    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -22,7 +22,7 @@ router.post(
     // #swagger.tags = ['left-nav-data']
     const data = {
       leftNav: req.body.leftNav,
-      technicalStackId: req.body.technicalStackId,
+      // technicalStackId: req.body.technicalStackId,
       technologiesId: req.body.technologiesId,
     };
     const dateNow = getDate();
@@ -49,10 +49,10 @@ router.post(
 router.get(
   "/",
   [
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
+    // check("technicalStackId")
+    //   .not()
+    //   .isEmpty()
+    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -68,7 +68,7 @@ router.get(
       db.left_nav.find(
         {
           technologiesId: req.query.technologiesId,
-          technicalStackId: req.query.technicalStackId,
+          // technicalStackId: req.query.technicalStackId,
         },
         (err, doc) => {
           if (err) {

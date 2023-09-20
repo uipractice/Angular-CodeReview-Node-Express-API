@@ -30,10 +30,10 @@ router.post(
       .not()
       .isEmpty()
       .withMessage("reviewersName is required"),
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
+    // check("technicalStackId")
+    //   .not()
+    //   .isEmpty()
+    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -52,7 +52,7 @@ router.post(
       projectLead: req.body.projectLead,
       reviewersName: req.body.reviewersName,
       status: req.body.status,
-      technicalStackId: req.body.technicalStackId,
+      // technicalStackId: req.body.technicalStackId,
       technologiesId: req.body.technologiesId,
       storyId: req.body.storyId,
       reviewPackagesandFiles: req.body.reviewPackagesandFiles,
@@ -117,10 +117,10 @@ router.put(
       .not()
       .isEmpty()
       .withMessage("reviewersName is required"),
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
+    // check("technicalStackId")
+    //   .not()
+    //   .isEmpty()
+    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -140,7 +140,7 @@ router.put(
       projectLead: req.body.projectLead,
       reviewersName: req.body.reviewersName,
       status: req.body.status,
-      technicalStackId: req.body.technicalStackId,
+      // technicalStackId: req.body.technicalStackId,
       technologiesId: req.body.technologiesId,
       storyId: req.body.storyId,
       reviewPackagesandFiles: req.body.reviewPackagesandFiles,

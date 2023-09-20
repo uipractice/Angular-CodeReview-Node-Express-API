@@ -7,10 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://localhost:3000/api/"
-    },
-    {
-      "url": "https://cg3zhj7w4a.execute-api.ap-south-1.amazonaws.com/default/api/"
+      "url": "http://localhost:3000/"
     }
   ],
   "paths": {

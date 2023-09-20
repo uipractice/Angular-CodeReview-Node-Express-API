@@ -32,10 +32,10 @@ router.post("/",(req, res) => {
 router.get(
   "/",
   [
-    check("technicalStackId")
-      .not()
-      .isEmpty()
-      .withMessage("technicalStackId is required"),
+    // check("technicalStackId")
+    //   .not()
+    //   .isEmpty()
+    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -52,7 +52,7 @@ router.get(
       db.check_list_questions.find(
         {
           technologiesId: req.query.technologiesId,
-          technicalStackId: req.query.technicalStackId,
+          // technicalStackId: req.query.technicalStackId,
         },
         (err, doc) => {
           if (err) {
