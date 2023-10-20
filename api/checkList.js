@@ -101,9 +101,16 @@ router.get("/", (req, res) => {
   try {
     var condition = {};
     if (req.query.detailsId) {
-      condition = { detailsId: req.query.detailsId };
+      condition.detailsId = req.query.detailsId;
     }
-    db.check_list.find(condition, (err, doc) => {
+    var projection = {};
+    if (req.query.key) {
+      condition.data = { $elemMatch: { key: req.query.key } };
+      projection = {
+        "data.$": 1
+      };
+    }
+    db.check_list.find(condition, projection).toArray((err, doc) => {
       if (err) {
         res.status(500).json({ success: false, message: err });
       } else {
