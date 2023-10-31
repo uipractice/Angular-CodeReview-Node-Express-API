@@ -20,22 +20,6 @@ const getTechnologies = (condition) => {
   });
 };
 
-const getTechnicalStack = (condition) => {
-  return new Promise((resolve, reject) => {
-    try {
-      db.technical_stack.findOne(condition, (err, doc) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(doc);
-        }
-      });
-    } catch (err) {
-      reject(err);
-    }
-  });
-};
-
 router.post(
   "/",
   [
@@ -50,11 +34,6 @@ router.post(
     }
     const data = req.body;
     try {
-      // if (data.technicalStackId && _idValidation(data.technicalStackId)) {
-        // const technicalStackData = await getTechnicalStack({
-        //   _id: new ObjectId(data.technicalStackId),
-        // });
-        // if (technicalStackData) {
           const technologiesData = await getTechnologies({ name: data.name });
           if (technologiesData) {
             res
@@ -72,16 +51,7 @@ router.post(
               }
             });
           }
-        // } else {
-        //   res
-        //     .status(500)
-        //     .json({ success: false, message: `Invalid technical stack` });
-        // }
-      // } else {
-      //   res
-      //     .status(500)
-      //     .json({ success: false, message: `Invalid technicalStackId` });
-      // }
+        
     } catch (err) {
       res.status(500).json({ success: false, message: err });
     }
@@ -95,14 +65,9 @@ router.put("/", async (req, res) => {
   try {
     // #swagger.tags = ['technologies']
     if (id && _idValidation(id)) {
-      // if (data.technicalStackId && _idValidation(data.technicalStackId)) {
         const condition = { _id: new ObjectId(id) };
         const technologiesData = await getTechnologies(condition);
         if (technologiesData) {
-          // const technicalStackData = await getTechnicalStack({
-          //   _id: new ObjectId(data.technicalStackId),
-          // });
-          // if (technicalStackData) {
             db.technologies.update(
               condition,
               { $set: { ...data } },
@@ -117,24 +82,12 @@ router.put("/", async (req, res) => {
                 }
               }
             );
-          // } else {
-          //   res.status(500).json({
-          //     success: false,
-          //     message: `Invalid technical stack`,
-          //   });
-          // }
         } else {
           res.status(500).json({
             success: false,
             message: `Record not found in database`,
           });
         }
-      // } else {
-      //   res.status(500).json({
-      //     success: false,
-      //     message: `Invalid technicalStackId`,
-      //   });
-      // }
     } else {
       res.status(500).json({
         success: false,
@@ -149,33 +102,14 @@ router.put("/", async (req, res) => {
 router.get("/", (req, res) => {
   try {
     // #swagger.tags = ['technologies']
-    var pipeline = [
-      {
-        $lookup: {
-          let: { technicalStackObjId: { $toObjectId: "$technicalStackId" } },
-          from: "technical_stack",
-          pipeline: [
-            { $match: { $expr: { $eq: ["$_id", "$$technicalStackObjId"] } } },
-            { $project: { _id: 0 } },
-          ],
-          as: "technical_stack",
-        },
-      },
-      {
-        $unwind: "$technical_stack",
-      },
-    ];
-    if (req.query.technicalStackId) {
-      pipeline = [
-        ...pipeline,
-        {
-          $match: {
-            technicalStackId: req.query.technicalStackId,
-          },
-        },
-      ];
-    }
-    db.technologies.aggregate(pipeline, (err, doc) => {
+
+     let condition = {};
+     if (req.query.technologiesId) {
+       condition = {
+         _id: new ObjectId(req.query.technologiesId),
+       };
+     }
+    db.technologies.find(condition, (err, doc) => {
       if (err) {
         res.status(500).json({ success: false, message: err });
       } else {

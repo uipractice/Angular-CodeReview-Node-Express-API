@@ -9,6 +9,7 @@ const lefNavData = require("../api/leftNavData");
 const users = require("../api/users");
 const login = require("../api/login");
 const user = require("../api/user");
+const fileUpload = require('../api/fileUpload');
 
 const { tokenVerify } = require("../hooks/authentication");
 
@@ -38,6 +39,6 @@ router.use("/users", tokenVerify, hasPermission(["admin"]), users);
 
 router.use("/user", tokenVerify,  user);
 
-
+router.use("/fileUpload",tokenVerify, fileUpload);
 
 module.exports = router;
