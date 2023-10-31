@@ -46,6 +46,6 @@ describe("Login API", () => {
 
     expect(response.status).toBe(401);
     expect(response.body.success).toBe(false);
-    expect(response.body.message).toBe("Email not existed");
+    expect(response.body.message).toBe("Email not existed")
   });
 });
