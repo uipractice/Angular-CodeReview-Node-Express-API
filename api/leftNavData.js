@@ -9,10 +9,6 @@ router.post(
   "/",
   [
     check("leftNav").not().isEmpty().withMessage("leftNav is required"),
-    // check("technicalStackId")
-    //   .not()
-    //   .isEmpty()
-    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -22,7 +18,6 @@ router.post(
     // #swagger.tags = ['left-nav-data']
     const data = {
       leftNav: req.body.leftNav,
-      // technicalStackId: req.body.technicalStackId,
       technologiesId: req.body.technologiesId,
     };
     const dateNow = getDate();
@@ -49,10 +44,6 @@ router.post(
 router.get(
   "/",
   [
-    // check("technicalStackId")
-    //   .not()
-    //   .isEmpty()
-    //   .withMessage("technicalStackId is required"),
     check("technologiesId")
       .not()
       .isEmpty()
@@ -68,7 +59,6 @@ router.get(
       db.left_nav.find(
         {
           technologiesId: req.query.technologiesId,
-          // technicalStackId: req.query.technicalStackId,
         },
         (err, doc) => {
           if (err) {
@@ -105,5 +95,43 @@ router.delete("/", (req, res) => {
     res.status(500).json({ success: false, message: err });
   }
 });
+
+router.put(
+  "/",
+  [
+    check("leftNav").not().isEmpty().withMessage("leftNav is required"),
+    check("leftNavId").not().isEmpty().withMessage("leftNavId is required"),
+  ],
+  (req, res) => {
+    // #swagger.tags = ['left-nav-data']
+    const leftNav = req.body.leftNav;
+    const leftNavId = req.body.leftNavId;
+    try {
+      if (_idValidation(leftNavId)) {
+        const condition = { _id: new ObjectId(leftNavId) };
+        db.left_nav.update(
+          condition,
+          { $addToSet: { leftNav: leftNav } },
+          (err, doc) => {
+            if (err) {
+              res.status(500).json({ success: false, message: err });
+            } else {
+              res.json({
+                success: true,
+                message: "Left nav data successfully Updated",
+              });
+            }
+          }
+        );
+      } else {
+        res.status(500).json({ success: false, message: `Invalid leftNavId` });
+      }
+      
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err });
+    }
+  }
+);
 
 module.exports = router;
