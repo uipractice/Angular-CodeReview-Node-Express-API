@@ -103,4 +103,47 @@ router.delete("/", (req, res) => {
   }
 });
 
+
+router.put(
+  "/",
+  [
+    check("checkListQuestionsId")
+      .not()
+      .isEmpty()
+      .withMessage("checkListQuestionsId is required"),
+  ],
+  (req, res) => {
+    // #swagger.tags = ['check-list-questions']
+    const data = req.body;
+    const checkListQuestionsId = req.body.checkListQuestionsId;
+    delete data.checkListQuestionsId;
+    try {
+      if (_idValidation(checkListQuestionsId)) {
+        const condition = { _id: new ObjectId(checkListQuestionsId) };
+        db.check_list_questions.update(
+          condition,
+          { $set: { ...data } },
+          (err, doc) => {
+            if (err) {
+              res.status(500).json({ success: false, message: err });
+            } else {
+              res.json({
+                success: true,
+                message: "Check list questions data successfully Updated",
+              });
+            }
+          }
+        );
+      } else {
+        res
+          .status(500)
+          .json({ success: false, message: `Invalid checkListQuestionsId` });
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: err });
+    }
+  }
+);
+
 module.exports = router;
