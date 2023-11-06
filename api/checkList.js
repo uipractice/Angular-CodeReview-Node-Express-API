@@ -78,7 +78,13 @@ router.put(
           detailsId: req.body.detailsId,
           "data.key": req.body.data[0].key,
         },
-        { $set: { "data.$.value": req.body.data[0].value } },
+        {
+          $set: {
+            "data.$.value": req.body.data[0].value,
+            comments: req.body.comments,
+            percentage: req.body.percentage,
+          },
+        },
         (err, doc) => {
           if (err) {
             res.status(500).json({ success: false, message: err });
