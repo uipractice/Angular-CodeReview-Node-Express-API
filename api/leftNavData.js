@@ -109,20 +109,22 @@ router.put(
     try {
       if (_idValidation(leftNavId)) {
         const condition = { _id: new ObjectId(leftNavId) };
-        db.left_nav.update(
-          condition,
-          { $addToSet: { leftNav: leftNav } },
-          (err, doc) => {
-            if (err) {
-              res.status(500).json({ success: false, message: err });
-            } else {
-              res.json({
-                success: true,
-                message: "Left nav data successfully Updated",
-              });
-            }
+        var query = "";
+        if(req.body.remove){
+          query = { $pull: { leftNav: leftNav }};
+        } else {
+          query = { $addToSet: { leftNav: leftNav }}
+        }
+        db.left_nav.update(condition, query, (err, doc) => {
+          if (err) {
+            res.status(500).json({ success: false, message: err });
+          } else {
+            res.json({
+              success: true,
+              message: "Left nav data successfully Updated",
+            });
           }
-        );
+        });
       } else {
         res.status(500).json({ success: false, message: `Invalid leftNavId` });
       }
