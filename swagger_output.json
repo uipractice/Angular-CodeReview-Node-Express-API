@@ -103,9 +103,6 @@
                   "status": {
                     "example": "any"
                   },
-                  "technicalStackId": {
-                    "example": "any"
-                  },
                   "technologiesId": {
                     "example": "any"
                   },
@@ -174,9 +171,6 @@
                     "example": "any"
                   },
                   "status": {
-                    "example": "any"
-                  },
-                  "technicalStackId": {
                     "example": "any"
                   },
                   "technologiesId": {
@@ -353,6 +347,12 @@
                   },
                   "data": {
                     "example": "any"
+                  },
+                  "comments": {
+                    "example": "any"
+                  },
+                  "percentage": {
+                    "example": "any"
                   }
                 }
               }
@@ -375,6 +375,13 @@
           },
           {
             "name": "detailsId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "key",
             "in": "query",
             "schema": {
               "type": "string"
@@ -614,9 +621,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "technicalStackId": {
-                    "example": "any"
-                  },
                   "name": {
                     "example": "any"
                   }
@@ -660,9 +664,6 @@
                   "name": {
                     "example": "any"
                   },
-                  "technicalStackId": {
-                    "example": "any"
-                  },
                   "_id": {
                     "example": "any"
                   }
@@ -686,7 +687,7 @@
             }
           },
           {
-            "name": "technicalStackId",
+            "name": "technologiesId",
             "in": "query",
             "schema": {
               "type": "string"
@@ -809,13 +810,6 @@
             "schema": {
               "type": "string"
             }
-          },
-          {
-            "name": "technicalStackId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
           }
         ],
         "responses": {
@@ -865,6 +859,63 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "check-list-questions"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "technologiesId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "checkListQuestionsId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     },
     "/lefNavData/": {
@@ -902,9 +953,6 @@
                   "leftNav": {
                     "example": "any"
                   },
-                  "technicalStackId": {
-                    "example": "any"
-                  },
                   "technologiesId": {
                     "example": "any"
                   }
@@ -929,13 +977,6 @@
           },
           {
             "name": "technologiesId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "technicalStackId",
             "in": "query",
             "schema": {
               "type": "string"
@@ -987,6 +1028,52 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "left-nav-data"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "leftNav": {
+                    "example": "any"
+                  },
+                  "leftNavId": {
+                    "example": "any"
+                  },
+                  "remove": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1170,6 +1257,82 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/fileUpload/": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/reportSending/": {
+      "post": {
+        "tags": [
+          "report-sending"
+        ],
+        "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "detailsId": {
+                    "example": "any"
+                  },
+                  "toEmail": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
