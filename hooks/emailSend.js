@@ -73,20 +73,22 @@ function sendEmail(data, toEmail) {
       }
     });
     // Generate the Excel file.
-    workbook.xlsx
-      .writeFile("tmp/code-review-checklist.xlsx")
-      .then(() => {
+    workbook.xlsx.writeBuffer().then((bufferData) => {
+    // workbook.xlsx
+    //   .writeFile("tmp/code-review-checklist.xlsx")
+    //   .then(() => {
         // Create the email message with SendGrid
         const msg = {
           to: toEmail,
           from: "rgaddam@evoketechnologies.com",
-          subject: "Code Review Checklist Excel File Attached",
-          text: "Check out the attached Excel file for the code review checklist",
+          subject: `${data.account}-${data.project}: Code review check list`,
+          text: "Please review the code review checklist provided in the attached Excel file.",
           attachments: [
             {
-              content: Buffer.from(
-                require("fs").readFileSync("tmp/code-review-checklist.xlsx")
-              ).toString("base64"),
+              content: bufferData.toString("base64"),
+              // Buffer.from(
+              //   require("fs").readFileSync("tmp/code-review-checklist.xlsx")
+              // ).toString("base64"),
               filename: "code-review-checklist.xlsx",
               type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
               disposition: "attachment",
