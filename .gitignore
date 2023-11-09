@@ -2,3 +2,5 @@
 
 # Node
 /node_modules
+*.env.development
+*.env.test

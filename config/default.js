@@ -3,11 +3,7 @@ const {
   DB_PASSWORD,
   DB_USER,
   DATABASE,
-  S3_REGION,
-  S3_ACCESS_KEY_ID,
-  S3_SECRET_ACCESS_KEY,
-  S3_BUCKET_NAME,
-  S3_BUCKET_KEY
+  SEND_GRID_API_KEY,
 } = process.env;
   
   module.exports = {
@@ -16,10 +12,6 @@ const {
     DB_PASSWORD: DB_PASSWORD,
     DB_USER: DB_USER,
     DATABASE: DATABASE,
-    S3_REGION,
-    S3_ACCESS_KEY_ID,
-    S3_SECRET_ACCESS_KEY,
-    S3_BUCKET_NAME,
-    S3_BUCKET_KEY
+    SEND_GRID_API_KEY
   };
   

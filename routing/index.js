@@ -10,6 +10,7 @@ const users = require("../api/users");
 const login = require("../api/login");
 const user = require("../api/user");
 const fileUpload = require('../api/fileUpload');
+const reportSending = require('../api/reportSending');
 
 const { tokenVerify } = require("../hooks/authentication");
 
@@ -40,5 +41,6 @@ router.use("/users", tokenVerify, hasPermission(["admin"]), users);
 router.use("/user", tokenVerify,  user);
 
 router.use("/fileUpload",tokenVerify, fileUpload);
+router.use("/reportSending", tokenVerify, reportSending);
 
 module.exports = router;
