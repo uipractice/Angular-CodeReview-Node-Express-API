@@ -107,6 +107,7 @@ function sendEmail(data, toEmail) {
           });
       })
       .catch((error) => {
+        console.log(error);
         console.error("Error generating Excel file:", error);
         rejects("Error sending email:", error);
       });
