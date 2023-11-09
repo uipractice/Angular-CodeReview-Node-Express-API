@@ -74,7 +74,7 @@ function sendEmail(data, toEmail) {
     });
     // Generate the Excel file.
     workbook.xlsx
-      .writeFile("code-review-checklist.xlsx")
+      .writeFile("tmp/code-review-checklist.xlsx")
       .then(() => {
         // Create the email message with SendGrid
         const msg = {
@@ -85,7 +85,7 @@ function sendEmail(data, toEmail) {
           attachments: [
             {
               content: Buffer.from(
-                require("fs").readFileSync("code-review-checklist.xlsx")
+                require("fs").readFileSync("tmp/code-review-checklist.xlsx")
               ).toString("base64"),
               filename: "code-review-checklist.xlsx",
               type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
