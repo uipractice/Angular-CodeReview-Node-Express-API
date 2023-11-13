@@ -113,7 +113,9 @@ router.get("/", (req, res) => {
     if (req.query.key) {
       condition.data = { $elemMatch: { key: req.query.key } };
       projection = {
-        "data.$": 1
+        "data.$": 1,
+        comments: 1,
+        percentage: 1
       };
     }
     db.check_list.find(condition, projection).toArray((err, doc) => {
