@@ -58,12 +58,17 @@ router.get(
           if (err) {
             res.status(500).json({ success: false, message: err });
           } else {
+            var dataExist = false;
             if (type && doc.length && doc[0].data) {
               for (let i = 0; i < doc[0].data.length; i++) {
                 if (doc[0].data[i].key == type) {
                   doc[0].data = [doc[0].data[i]];
+                  dataExist = true;
                   break;
                 }
+              }
+              if(!dataExist){
+                doc = [];
               }
             }
             res.json({ success: true, data: doc });

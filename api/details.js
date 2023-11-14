@@ -246,16 +246,26 @@ router.delete("/", (req, res) => {
   // #swagger.tags = ['details']
   try {
     if (req.query.detailsId && _idValidation(req.query.detailsId)) {
-      db.details.remove(
-        { _id: new ObjectId(req.query.detailsId) },
-        (err, doc) => {
-          if (err) {
-            res.status(500).json({ success: false, message: err });
-          } else {
-            res.json({ success: true, data: `Record successfully deleted` });
-          }
+      db.check_list.remove({ detailsId: req.query.detailsId }, (err1, doc1)=>{
+        if(err1){
+          res.status(500).json({ success: false, message: err1 });
+        } else {
+          db.details.remove(
+            { _id: new ObjectId(req.query.detailsId) },
+            (err, doc) => {
+              if (err) {
+                res.status(500).json({ success: false, message: err });
+              } else {
+                res.json({
+                  success: true,
+                  data: `Record successfully deleted`,
+                });
+              }
+            }
+          );
         }
-      );
+      });
+      
     } else {
       res.status(500).json({ success: false, message: `Invalid _id` });
     }

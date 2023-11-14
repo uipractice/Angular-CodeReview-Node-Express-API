@@ -11,6 +11,8 @@ const login = require("../api/login");
 const user = require("../api/user");
 const fileUpload = require('../api/fileUpload');
 const reportSending = require('../api/reportSending');
+const forgotPassword = require('../api/forgotPassword');
+const resetPassword = require("../api/resetPassword");
 
 const { tokenVerify } = require("../hooks/authentication");
 
@@ -42,5 +44,7 @@ router.use("/user", tokenVerify,  user);
 
 router.use("/fileUpload",tokenVerify, fileUpload);
 router.use("/reportSending", tokenVerify, reportSending);
+router.use("/forgotPassword", forgotPassword);
+router.use("/resetPassword", resetPassword);
 
 module.exports = router;
