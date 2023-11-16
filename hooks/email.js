@@ -9,7 +9,8 @@ const email = (data)=>{
           from: "rgaddam@evoketechnologies.com",
           subject: data.subject,
           text: data.body,
-          html: data.html
+          html: data.html,
+          attachments : data.attachments
         };
 
         sgMail

@@ -34,7 +34,7 @@ router.post("/", [
                     to: req.body.email,
                     //   html: `<p>Click on this <a href="http:/localhost:3000/password/reset/${forgotToken}">link</a> to reset your password.</p>`,
                     html: `<body>
-                            <p>Click to set a new password: <a href="${config.FE_HOST}/resetPassword/${resetToken}">Link</a></p>
+                            <p>Click <a href="${config.FE_HOST}/resetPassword/${resetToken}">here</a> to reset your password</p>
                             </body>`,
                   };
                   await emailNotification(emailData);

@@ -3,8 +3,8 @@ const db = require("../db/connection");
 const ObjectId = require("mongojs").ObjectId;
 const _idValidation = require("../help/_idValidation");
 const { check, validationResult } = require("express-validator");
-const sendEmail = require('../hooks/emailSend');
-
+const PrepareExcel = require("../hooks/PrepareExcel");
+const email = require("../hooks/email");
 router.post(
   "/",
   [
@@ -37,8 +37,22 @@ router.post(
                         doc[key] = detDoc[key];
                       }
                     }
-                    console.log(doc);
-                    await sendEmail(doc, req.body.toEmail);
+                    
+                    var excelContent = await PrepareExcel(doc);
+                    excelData = {
+                      to : req.body.toEmail,
+                      subject : `${doc.account}-${doc.project}: Code review check list`,
+                      body : "Please review the code review checklist provided in the attached Excel file.",
+                      attachments : [
+                        {
+                          content: excelContent.toString("base64"),
+                          filename: "code-review-checklist.xlsx",
+                          type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                          disposition: "attachment",
+                        },
+                      ]
+                    }
+                    await email(excelData);
                     res.json({ success: true, data: "Report sent successfully" });
                   }
                 });
