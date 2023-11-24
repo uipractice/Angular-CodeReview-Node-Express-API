@@ -40,20 +40,34 @@ router.post(
                     
                     var excelContent = await PrepareExcel(doc);
                     excelData = {
-                      to : req.body.toEmail,
-                      subject : `${doc.account}-${doc.project}: Code review check list`,
-                      body : "Please review the code review checklist provided in the attached Excel file.",
-                      attachments : [
+                      to: req.body.toEmail,
+                      subject: `${doc.account}-${doc.project}: Code review check list`,
+                      body: "Please review the code review checklist provided in the attached Excel file.",
+                      attachments: [
                         {
-                          content: excelContent.toString("base64"),
+                          // content: excelContent.toString("base64"),
+                          content: excelContent,
                           filename: "code-review-checklist.xlsx",
                           type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                           disposition: "attachment",
                         },
-                      ]
+                      ],
+                    };
+                    try {
+                       await email(excelData);
+                       res.json({
+                         success: true,
+                         data: "Report sent successfully",
+                       });
+                    } catch(err){
+                      res
+                        .status(500)
+                        .json({
+                          success: false,
+                          message: err,
+                        });
                     }
-                    await email(excelData);
-                    res.json({ success: true, data: "Report sent successfully" });
+                   
                   }
                 });
                 
