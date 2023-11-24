@@ -130,4 +130,38 @@ router.get("/", (req, res) => {
   }
 });
 
+
+router.delete(
+  "/",
+  [check("detailsId").not().isEmpty().withMessage("detailsId is required")],
+  (req, res) => {
+    // #swagger.tags = ['check-list']
+    var errors = validationResult(req).array();
+    if (errors && errors.length) {
+      return res.status(400).json({ success: false, message: errors });
+    }
+    try {
+      if (req.query.detailsId && _idValidation(req.query.detailsId)) {
+        db.check_list.remove(
+          { detailsId: req.query.detailsId },
+          (err, doc) => {
+            if (err) {
+              res.status(500).json({ success: false, message: err });
+            } else {
+              res.json({
+                success: true,
+                data: `Record successfully deleted`,
+              });
+            }
+          }
+        );
+      } else {
+        res.status(500).json({ success: false, message: `Invalid detailsId` });
+      }
+    } catch (err) {
+      res.status(500).json({ success: false, message: err });
+    }
+  }
+);
+
 module.exports = router;
